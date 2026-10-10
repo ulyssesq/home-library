@@ -1,2 +1,11 @@
 <Solution>
+  <Folder Name="/apps/" />
+  <Folder Name="/apps/api/" />
+  <Folder Name="/apps/api/src/">
+    <Project Path="apps/api/src/HomeLibrary.Api/HomeLibrary.Api.csproj" />
+  </Folder>
+  <Folder Name="/apps/api/tests/">
+    <Project Path="apps/api/tests/HomeLibrary.IntegrationTests/HomeLibrary.IntegrationTests.csproj" />
+    <Project Path="apps/api/tests/HomeLibrary.UnitTests/HomeLibrary.UnitTests.csproj" />
+  </Folder>
 </Solution>
