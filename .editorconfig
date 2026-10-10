@@ -1,0 +1,15 @@
+# Indicates that this is the root editor configuration file and that other .editorconfig files in parent directories should be ignored.
+root = true
+
+# Rules for all files
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Rules for JSON, YAML, and YML files
+[*.{json.yml,yaml}]
+ident_size = 2
