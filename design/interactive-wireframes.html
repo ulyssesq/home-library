@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookSticker — Wireframes Interativos de UX/UI (v2.0)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Selos de Metal Nobre para a Gamificação */
+    .seal-gold {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.05) 50%, rgba(251, 191, 36, 0.25) 100%);
+      box-shadow: 0 4px 14px -1px rgba(245, 158, 11, 0.25), inset 0 0 0 1.5px rgba(251, 191, 36, 0.8);
+    }
+    .seal-silver {
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.2) 0%, rgba(148, 163, 184, 0.05) 50%, rgba(226, 232, 240, 0.25) 100%);
+      box-shadow: 0 4px 14px -1px rgba(148, 163, 184, 0.25), inset 0 0 0 1.5px rgba(203, 213, 225, 0.8);
+    }
+    .seal-bronze {
+      background: linear-gradient(135deg, rgba(217, 119, 6, 0.2) 0%, rgba(180, 83, 9, 0.05) 50%, rgba(217, 119, 6, 0.25) 100%);
+      box-shadow: 0 4px 14px -1px rgba(180, 83, 9, 0.25), inset 0 0 0 1.5px rgba(217, 119, 6, 0.8);
+    }
+    .slot-empty {
+      background-image: repeating-linear-gradient(45deg, rgba(71, 85, 105, 0.15) 0, rgba(71, 85, 105, 0.15) 8px, transparent 0, transparent 16px);
+      border: 2px dashed rgba(100, 116, 139, 0.4);
+    }
+    .laser-scan {
+      animation: scanLaser 2s infinite ease-in-out;
+    }
+    @keyframes scanLaser {
+      0%, 100% { top: 15%; opacity: 0.2; }
+      50% { top: 85%; opacity: 0.9; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- TOPBAR / CONTROLE DO PROTÓTIPO -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-black text-xl">
+          ✦
+        </div>
+        <div>
+          <h1 class="font-bold text-base md:text-lg flex items-center gap-2">
+            BookSticker <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-medium">UX v2.0</span>
+          </h1>
+          <p class="text-xs text-slate-400">Coleções • Posse vs. Leitura • Tsundoku • IA Vocabular</p>
+        </div>
+      </div>
+
+      <!-- SELETOR DE TELAS -->
+      <nav class="flex items-center bg-slate-950 border border-slate-800 p-1 rounded-xl text-xs sm:text-sm">
+        <button onclick="switchScreen('album')" id="btn-tab-album" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium transition-all bg-amber-500 text-slate-950 shadow-sm">
+          🏆 Álbum & Tsundoku
+        </button>
+        <button onclick="switchScreen('scanner')" id="btn-tab-scanner" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium transition-all text-slate-400 hover:text-slate-200">
+          📷 Scanner & Prateleira
+        </button>
+        <button onclick="switchScreen('book')" id="btn-tab-book" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium transition-all text-slate-400 hover:text-slate-200">
+          🧠 Ficha & Vocabulário IA
+        </button>
+        <button onclick="switchScreen('wishlist')" id="btn-tab-wishlist" class="tab-btn px-3.5 py-1.5 rounded-lg font-medium transition-all text-slate-400 hover:text-slate-200">
+          🎁 Wishlist Web
+        </button>
+      </nav>
+
+      <!-- LEGENDA DOS SELOS DE MAESTRIA -->
+      <div class="hidden xl:flex items-center gap-3 text-xs">
+        <span class="flex items-center gap-1 text-amber-400">🥇 <strong>Ouro:</strong> Tenho + Lido</span>
+        <span class="flex items-center gap-1 text-slate-300">🥈 <strong>Prata:</strong> Lido</span>
+        <span class="flex items-center gap-1 text-amber-600">🥉 <strong>Bronze:</strong> Na Estante</span>
+        <span class="flex items-center gap-1 text-slate-500">⚪ <strong>Vazio:</strong> Wishlist</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ÁREA DE PROJEÇÃO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto p-4 md:p-8 flex justify-center items-start">
+
+    <!-- ========================================================================= -->
+    <!-- TELA 1: ÁLBUM DE COLEÇÃO & WIDGET TSUNDOKU                                -->
+    <!-- ========================================================================= -->
+    <div id="screen-album" class="screen-view w-full max-w-sm sm:max-w-md bg-slate-900 border border-slate-800 rounded-[2.5rem] shadow-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col min-h-[840px]">
+      
+      <!-- Notch / Status Bar Mobile -->
+      <div class="flex justify-between items-center text-xs text-slate-400 px-3 pt-1 pb-3">
+        <span>09:41</span>
+        <div class="w-20 h-4 bg-slate-950 rounded-full mx-auto"></div>
+        <div class="flex items-center space-x-1.5">
+          <span>5G</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <!-- Header da Coleção / Álbum -->
+      <div class="relative bg-gradient-to-b from-slate-800/90 to-slate-950/95 border border-slate-700/60 rounded-2xl p-4 mb-3 overflow-hidden">
+        <div class="flex gap-3.5 items-center">
+          <div class="w-16 h-22 rounded-xl bg-gradient-to-tr from-amber-600/30 to-amber-400/10 border border-amber-500/40 p-1 flex-shrink-0 flex flex-col items-center justify-center text-center shadow-md">
+            <span class="text-xl">🏆</span>
+            <span class="text-[9px] font-bold text-amber-300 mt-1 uppercase">Clássicos</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Álbum Curado</span>
+              <span class="text-xs text-slate-400">#01 de 10</span>
+            </div>
+            <h2 class="text-base font-bold text-white truncate mt-0.5">1001 Livros Para Ler</h2>
+            <p class="text-xs text-slate-400">Curadoria Peter Boxall & Críticos</p>
+          </div>
+        </div>
+
+        <!-- Progresso Geral dos Selos -->
+        <div class="mt-3 pt-3 border-t border-slate-800">
+          <div class="flex justify-between items-center text-xs mb-1.5">
+            <span class="font-medium text-slate-300">Progresso Geral</span>
+            <span class="font-bold text-white">54 / 100 <span class="text-amber-400 font-normal">(54%)</span></span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800 flex">
+            <!-- Barra Ouro (28) -->
+            <div class="h-full bg-amber-400 rounded-l-full" style="width: 28%"></div>
+            <!-- Barra Prata (14) -->
+            <div class="h-full bg-slate-300" style="width: 14%"></div>
+            <!-- Barra Bronze (12) -->
+            <div class="h-full bg-amber-600 rounded-r-full" style="width: 12%"></div>
+          </div>
+          <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2 font-medium">
+            <span class="text-amber-300">🥇 28 Ouro</span>
+            <span class="text-slate-200">🥈 14 Prata</span>
+            <span class="text-amber-500">🥉 12 Bronze</span>
+            <span class="text-slate-500">⚪ 46 Faltam</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD EXCLUSIVO: CALCULADORA DE TSUNDOKU -->
+      <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 border border-amber-500/30 rounded-2xl p-3 mb-3 flex items-start gap-3 shadow-md">
+        <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-base flex-shrink-0 mt-0.5">
+          📚
+        </div>
+        <div class="flex-1 text-xs">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-amber-300">Pilha Tsundoku (Não Lidos na Estante)</h4>
+            <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold">12 Livros</span>
+          </div>
+          <p class="text-slate-300 text-[11px] mt-1 leading-snug">
+            No seu ritmo atual (<strong>2.4 livros/mês</strong>), você tem <strong>5 meses de leitura garantida</strong> antes de precisar comprar novos títulos!
+          </p>
+        </div>
+      </div>
+
+      <!-- Filtros da Grade -->
+      <div class="flex gap-1.5 overflow-x-auto pb-2 mb-2 text-xs scrollbar-none">
+        <button class="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 font-bold whitespace-nowrap">Todos (100)</button>
+        <button class="px-2.5 py-1 rounded-full bg-slate-800 text-amber-400 hover:bg-slate-700 whitespace-nowrap">🥇 Ouro (28)</button>
+        <button class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-200 hover:bg-slate-700 whitespace-nowrap">🥈 Prata (14)</button>
+        <button class="px-2.5 py-1 rounded-full bg-slate-800 text-amber-600 hover:bg-slate-700 whitespace-nowrap">🥉 Bronze (12)</button>
+        <button class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap">⚪ Faltam (46)</button>
+      </div>
+
+      <!-- Grid de Livros / Coleções -->
+      <div class="flex-1 overflow-y-auto pr-1 grid grid-cols-3 gap-2 pb-20">
+
+        <!-- 1. SELO OURO: 1984 (Possui + Lido) -->
+        <div onclick="switchScreen('book')" class="group cursor-pointer seal-gold rounded-xl p-1.5 flex flex-col relative transition-transform hover:-translate-y-1">
+          <div class="absolute -top-1.5 -left-1.5 bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-md z-10 border border-amber-300 flex items-center gap-0.5">
+            <span>🥇</span> #001
+          </div>
+          <div class="w-full aspect-[2/3] bg-slate-800 rounded-lg overflow-hidden relative shadow-inner mb-1.5">
+            <div class="w-full h-full bg-gradient-to-br from-red-900 to-slate-900 flex flex-col justify-end p-1.5">
+              <span class="text-[11px] font-bold text-white leading-tight">1984</span>
+              <span class="text-[9px] text-slate-300">G. Orwell</span>
+            </div>
+            <div class="absolute top-1 right-1 px-1 py-0.5 rounded bg-amber-500/90 text-slate-950 text-[8px] font-black">
+              OURO
+            </div>
+          </div>
+          <span class="text-[11px] font-medium text-slate-200 truncate">1984</span>
+          <span class="text-[9px] text-amber-400 font-semibold">Tenho + Lido ✓</span>
+        </div>
+
+        <!-- 2. SELO PRATA: Dom Casmurro (Lido, mas não tenho físico) -->
+        <div onclick="switchScreen('book')" class="group cursor-pointer seal-silver rounded-xl p-1.5 flex flex-col relative transition-transform hover:-translate-y-1">
+          <div class="absolute -top-1.5 -left-1.5 bg-slate-200 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-md z-10 border border-white flex items-center gap-0.5">
+            <span>🥈</span> #002
+          </div>
+          <div class="w-full aspect-[2/3] bg-slate-800 rounded-lg overflow-hidden relative shadow-inner mb-1.5">
+            <div class="w-full h-full bg-gradient-to-br from-indigo-900 to-slate-950 flex flex-col justify-end p-1.5">
+              <span class="text-[11px] font-bold text-white leading-tight">Dom Casmurro</span>
+              <span class="text-[9px] text-slate-300">M. de Assis</span>
+            </div>
+            <div class="absolute top-1 right-1 px-1 py-0.5 rounded bg-slate-300 text-slate-950 text-[8px] font-black">
+              PRATA
+            </div>
+          </div>
+          <span class="text-[11px] font-medium text-slate-200 truncate">Dom Casmurro</span>
+          <span class="text-[9px] text-slate-300 font-semibold">Lido (s/ posse)</span>
+        </div>
+
+        <!-- 3. SELO BRONZE: Grande Sertão (Tenho na estante, Não Lido / Tsundoku) -->
+        <div onclick="switchScreen('book')" class="group cursor-pointer seal-bronze rounded-xl p-1.5 flex flex-col relative transition-transform hover:-translate-y-1">
+          <div class="absolute -top-1.5 -left-1.5 bg-amber-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-md z-10 border border-amber-500 flex items-center gap-0.5">
+            <span>🥉</span> #003
+          </div>
+          <div class="w-full aspect-[2/3] bg-slate-800 rounded-lg overflow-hidden relative shadow-inner mb-1.5">
+            <div class="w-full h-full bg-gradient-to-br from-amber-900 to-slate-950 flex flex-col justify-end p-1.5">
+              <span class="text-[11px] font-bold text-white leading-tight">Grande Sertão</span>
+              <span class="text-[9px] text-slate-300">G. Rosa</span>
+            </div>
+            <div class="absolute top-1 right-1 px-1 py-0.5 rounded bg-amber-600 text-white text-[8px] font-black">
+              BRONZE
+            </div>
+          </div>
+          <span class="text-[11px] font-medium text-slate-200 truncate">Grande Sertão</span>
+          <span class="text-[9px] text-amber-500 font-semibold">Na Estante (Pendente)</span>
+        </div>
+
+        <!-- 4. ESPAÇO VAZIO: Cem Anos de Solidão (Nem tenho nem li) -->
+        <div onclick="showSlotModal('Cem Anos de Solidão', '#004')" class="group cursor-pointer slot-empty rounded-xl p-1.5 flex flex-col relative transition-all hover:border-slate-500 bg-slate-950/60">
+          <div class="absolute -top-1.5 -left-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-slate-700">
+            #004
+          </div>
+          <div class="w-full aspect-[2/3] rounded-lg flex flex-col items-center justify-center text-slate-600 mb-1.5">
+            <span class="text-xl opacity-30">📖</span>
+            <span class="text-[9px] font-mono text-slate-500 mt-1">FALTANTE</span>
+          </div>
+          <span class="text-[11px] font-medium text-slate-500 truncate">Cem Anos...</span>
+          <span class="text-[9px] text-slate-600">Wishlist</span>
+        </div>
+
+        <!-- 5. SELO OURO: Ulisses -->
+        <div onclick="switchScreen('book')" class="group cursor-pointer seal-gold rounded-xl p-1.5 flex flex-col relative transition-transform hover:-translate-y-1">
+          <div class="absolute -top-1.5 -left-1.5 bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-md z-10 border border-amber-300 flex items-center gap-0.5">
+            <span>🥇</span> #005
+          </div>
+          <div class="w-full aspect-[2/3] bg-slate-800 rounded-lg overflow-hidden relative shadow-inner mb-1.5">
+            <div class="w-full h-full bg-gradient-to-br from-emerald-950 to-slate-950 flex flex-col justify-end p-1.5">
+              <span class="text-[11px] font-bold text-white leading-tight">Ulisses</span>
+              <span class="text-[9px] text-slate-300">J. Joyce</span>
+            </div>
+            <div class="absolute top-1 right-1 px-1 py-0.5 rounded bg-amber-500/90 text-slate-950 text-[8px] font-black">
+              OURO
+            </div>
+          </div>
+          <span class="text-[11px] font-medium text-slate-200 truncate">Ulisses</span>
+          <span class="text-[9px] text-amber-400 font-semibold">Tenho + Lido ✓</span>
+        </div>
+
+        <!-- 6. ESPAÇO VAZIO: O Idiota -->
+        <div onclick="showSlotModal('O Idiota', '#006')" class="group cursor-pointer slot-empty rounded-xl p-1.5 flex flex-col relative transition-all hover:border-slate-500 bg-slate-950/60">
+          <div class="absolute -top-1.5 -left-1.5 bg-slate-800 text-slate-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-slate-700">
+            #006
+          </div>
+          <div class="w-full aspect-[2/3] rounded-lg flex flex-col items-center justify-center text-slate-600 mb-1.5">
+            <span class="text-xl opacity-30">📖</span>
+            <span class="text-[9px] font-mono text-slate-500 mt-1">FALTANTE</span>
+          </div>
+          <span class="text-[11px] font-medium text-slate-500 truncate">O Idiota</span>
+          <span class="text-[9px] text-slate-600">Wishlist</span>
+        </div>
+
+      </div>
+
+      <!-- Barra de Navegação Inferior (Dock Mobile) -->
+      <div class="absolute bottom-3 left-4 right-4 bg-slate-950/95 backdrop-blur border border-slate-800 rounded-2xl py-2 px-4 flex justify-around items-center z-20 shadow-xl">
+        <button class="flex flex-col items-center text-amber-400">
+          <span class="text-lg">🏆</span>
+          <span class="text-[10px] font-bold">Coleções</span>
+        </button>
+        <button onclick="switchScreen('scanner')" class="w-12 h-12 -mt-5 bg-gradient-to-tr from-amber-500 to-amber-300 rounded-full flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/30 text-xl font-bold hover:scale-105 transition-transform">
+          📷
+        </button>
+        <button class="flex flex-col items-center text-slate-400 hover:text-slate-200">
+          <span class="text-lg">📚</span>
+          <span class="text-[10px]">Minha Estante</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TELA 2: SCANNER RÁPIDO & MODO PRATELEIRA (BATCH SCAN)                     -->
+    <!-- ========================================================================= -->
+    <div id="screen-scanner" class="screen-view hidden w-full max-w-sm sm:max-w-md bg-slate-950 border border-slate-800 rounded-[2.5rem] shadow-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col min-h-[840px]">
+      
+      <!-- Alternador de Modos de Escaneamento -->
+      <div class="flex items-center justify-between pb-3 text-xs">
+        <button onclick="switchScreen('album')" class="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-slate-300 hover:text-white border border-slate-700">✕</button>
+        
+        <div class="bg-slate-900 p-0.5 rounded-xl border border-slate-800 flex">
+          <button onclick="toggleScannerMode('unit')" id="btn-mode-unit" class="px-2.5 py-1 rounded-lg text-slate-400 font-medium transition-all">Unitário</button>
+          <button onclick="toggleScannerMode('shelf')" id="btn-mode-shelf" class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all">● MODO PRATELEIRA</button>
+        </div>
+
+        <button class="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-amber-400 border border-slate-700">⚡</button>
+      </div>
+
+      <!-- Câmera Viewfinder (Simulada) -->
+      <div class="relative w-full h-[320px] bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 flex flex-col justify-between p-4 shadow-inner">
+        <div class="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-25"></div>
+
+        <!-- Alerta de Status -->
+        <div class="relative z-10 flex justify-between items-center text-[11px]">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            Bip Automático Ativo
+          </span>
+          <span class="text-slate-400">Offline Outbox: Ativo</span>
+        </div>
+
+        <!-- Mira com Laser -->
+        <div class="relative mx-auto w-64 h-32 rounded-2xl border-2 border-amber-400/80 flex flex-col items-center justify-center shadow-lg shadow-amber-400/10">
+          <div class="laser-scan absolute left-2 right-2 h-0.5 bg-amber-400 shadow-[0_0_8px_#f59e0b]"></div>
+          
+          <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-amber-300"></div>
+          <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-amber-300"></div>
+          <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-amber-300"></div>
+          <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-amber-300"></div>
+
+          <div class="font-mono text-[10px] tracking-widest text-amber-300 bg-slate-950/90 px-2 py-0.5 rounded border border-amber-400/40">
+            9788535914849
+          </div>
+          <span class="text-[10px] text-slate-300 mt-1 font-medium">Passe os livros na frente da câmera</span>
+        </div>
+
+        <!-- Botão de Contingência OCR -->
+        <button onclick="triggerOcrModal()" class="relative z-10 self-center px-3 py-1.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-700 text-slate-300 text-[11px] flex items-center gap-1.5">
+          <span>🔍</span> Livro sem código de barras? <strong>Foto da Lombada</strong>
+        </button>
+      </div>
+
+      <!-- BANDEJA DE PRATELEIRA (LIVROS BIPADOS EM LOTE) -->
+      <div class="mt-3 flex-1 bg-slate-900 border border-slate-800 rounded-3xl p-3.5 flex flex-col justify-between shadow-2xl">
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xs font-bold text-white flex items-center gap-1.5">
+              <span>📚</span> Livros Bipados Nesta Prateleira:
+            </h3>
+            <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs border border-amber-500/30">
+              5 livros
+            </span>
+          </div>
+
+          <!-- Carrossel de Livros Coletados -->
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <div class="w-16 h-22 rounded-lg bg-red-950 border border-red-800 p-1 flex-shrink-0 flex flex-col justify-end text-[9px] text-white">
+              <span class="font-bold">1984</span>
+              <span class="text-[8px] text-slate-400">Orwell</span>
+            </div>
+            <div class="w-16 h-22 rounded-lg bg-indigo-950 border border-indigo-800 p-1 flex-shrink-0 flex flex-col justify-end text-[9px] text-white">
+              <span class="font-bold">Dom Casm.</span>
+              <span class="text-[8px] text-slate-400">Machado</span>
+            </div>
+            <div class="w-16 h-22 rounded-lg bg-amber-950 border border-amber-800 p-1 flex-shrink-0 flex flex-col justify-end text-[9px] text-white">
+              <span class="font-bold">Gr. Sertão</span>
+              <span class="text-[8px] text-slate-400">Rosa</span>
+            </div>
+            <div class="w-16 h-22 rounded-lg bg-emerald-950 border border-emerald-800 p-1 flex-shrink-0 flex flex-col justify-end text-[9px] text-white">
+              <span class="font-bold">Sapiens</span>
+              <span class="text-[8px] text-slate-400">Harari</span>
+            </div>
+            <div class="w-16 h-22 rounded-lg bg-blue-950 border border-blue-800 p-1 flex-shrink-0 flex flex-col justify-end text-[9px] text-white">
+              <span class="font-bold">O Hobbit</span>
+              <span class="text-[8px] text-slate-400">Tolkien</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ação do Lote -->
+        <div class="mt-3 pt-2.5 border-t border-slate-800 flex gap-2">
+          <button onclick="saveBatch()" class="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 hover:brightness-110 active:scale-95 transition-all">
+            💾 SALVAR LOTE DE 5 LIVROS NA ESTANTE
+          </button>
+          <button onclick="clearBatch()" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs">
+            Limpar
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TELA 3: FICHA DA OBRA — POSSE, LEITURA & IA LINGUÍSTICA                  -->
+    <!-- ========================================================================= -->
+    <div id="screen-book" class="screen-view hidden w-full max-w-sm sm:max-w-md bg-slate-900 border border-slate-800 rounded-[2.5rem] shadow-2xl p-4 sm:p-5 relative overflow-hidden flex flex-col min-h-[840px]">
+      
+      <!-- Topo -->
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800 text-xs">
+        <button onclick="switchScreen('album')" class="text-slate-400 hover:text-white flex items-center gap-1 font-medium">
+          ‹ Álbum de Clássicos
+        </button>
+        <span class="text-xs font-bold text-amber-400 flex items-center gap-1">🥇 Selo Ouro</span>
+        <button class="text-slate-400 hover:text-white">Editar ✎</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-1 py-3 space-y-3.5">
+        
+        <!-- Hero da Obra -->
+        <div class="flex gap-4 items-center">
+          <div class="w-22 h-32 rounded-xl seal-gold p-1 flex-shrink-0 relative shadow-xl">
+            <div class="w-full h-full bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 rounded-lg p-2 flex flex-col justify-end text-white">
+              <span class="text-xs font-black leading-tight">Dom Casmurro</span>
+              <span class="text-[9px] text-slate-300">Machado de Assis</span>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+              1001 Livros (#002)
+            </div>
+            <h2 class="text-lg font-black text-white leading-tight mt-0.5">Dom Casmurro</h2>
+            <p class="text-xs text-slate-300">Machado de Assis • 1899</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">256 páginas • Português Clássico</p>
+          </div>
+        </div>
+
+        <!-- CONTROLE INDEPENDENTE DE POSSE E LEITURA -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3 space-y-2.5">
+          <h4 class="text-xs font-bold text-slate-300">Minha Relação com Esta Obra</h4>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <!-- Posse Física -->
+            <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="text-[10px] text-slate-400 block mb-1">Posse Física:</span>
+              <div class="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
+                <span>✓</span> Tenho na Estante
+              </div>
+            </div>
+            <!-- Status de Leitura -->
+            <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="text-[10px] text-slate-400 block mb-1">Status de Leitura:</span>
+              <div class="flex items-center gap-1.5 text-amber-400 font-bold text-[11px]">
+                <span>✓</span> Lido (100%)
+              </div>
+            </div>
+          </div>
+
+          <div class="text-[10px] text-slate-400 text-center">
+            Classificação resultante: <strong class="text-amber-300">🥇 Selo Ouro (Livro físico + Leitura concluída)</strong>
+          </div>
+        </div>
+
+        <!-- IA: ANÁLISE LINGUÍSTICA, VOCABULÁRIO & CEFR -->
+        <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 rounded-2xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-xs">🧠</span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-amber-300">Análise Lexical & Idiomas (IA)</h3>
+            </div>
+            <span class="text-[10px] text-slate-400">Cache Postgres</span>
+          </div>
+
+          <!-- Métricas de Vocabulário -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="text-slate-400 text-[10px] block">Nível CEFR / Complexidade:</span>
+              <span class="font-bold text-amber-300 text-[11px]">C1/C2 (Erudito)</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <span class="text-slate-400 text-[10px] block">Vocabulário Único:</span>
+              <span class="font-bold text-slate-200 text-[11px]">~8.400 termos</span>
+            </div>
+          </div>
+
+          <!-- Mini-Glossário de Bolso Pré-Leitura -->
+          <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl text-xs">
+            <span class="text-slate-400 block mb-1.5 font-medium text-[11px]">📝 Glossário de Apoio Sugerido pela IA:</span>
+            <ul class="space-y-1 text-[11px] text-slate-300">
+              <li><strong class="text-amber-300">Casmurro:</strong> Obstinado, teimoso, homem calado e metido consigo.</li>
+              <li><strong class="text-amber-300">Alvíssaras:</strong> Prêmio ou recompensa concedida a quem traz boas notícias.</li>
+              <li><strong class="text-amber-300">Empáfia:</strong> Arrogância, soberba exagerada, altivez.</li>
+            </ul>
+          </div>
+
+          <!-- Ganho de Vocabulário para o Perfil -->
+          <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 flex items-center gap-2">
+            <span>📈</span>
+            <span>Esta leitura adiciona <strong>+320 pontos</strong> ao seu índice de vocabulário literário acumulado.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé -->
+      <div class="pt-2 border-t border-slate-800">
+        <button onclick="switchScreen('album')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">
+          Voltar ao Álbum
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TELA 4: WISHLIST PÚBLICA (VISÃO WEB COMPARTILHÁVEL)                       -->
+    <!-- ========================================================================= -->
+    <div id="screen-wishlist" class="screen-view hidden w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-5 md:p-8 flex flex-col">
+      
+      <div class="border-b border-slate-800 pb-5 mb-5">
+        <div class="flex items-center gap-2 text-xs text-amber-400 font-semibold mb-1">
+          <span>🎁 Lista Pública de Presentes</span>
+          <span>•</span>
+          <span class="text-slate-400">booksticker.app/u/ulysses/1001-livros</span>
+        </div>
+        <h2 class="text-xl md:text-2xl font-black text-white">Coleção: 1001 Livros Para Ler</h2>
+        <p class="text-xs md:text-sm text-slate-300 mt-1">
+          Estes são os títulos que ainda não possuo nesta coleção. Escolha um para me presentear e marque para evitar presentes duplicados!
+        </p>
+
+        <!-- Filtros da Wishlist -->
+        <div class="mt-4 flex flex-wrap gap-2 text-xs">
+          <button class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold">Todos os Faltantes (46)</button>
+          <button class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Mais Fáceis (Nível B1/B2)</button>
+          <button class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Menor Preço (~R$ 39)</button>
+        </div>
+      </div>
+
+      <!-- Itens Faltantes -->
+      <div class="space-y-3">
+
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex gap-3 items-center">
+            <div class="w-12 h-16 rounded-lg bg-slate-800 flex-shrink-0 flex items-center justify-center font-bold text-xs text-amber-400 border border-slate-700">
+              #004
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white">Cem Anos de Solidão</h4>
+              <p class="text-xs text-slate-400">Gabriel García Márquez • 448 págs</p>
+              <span class="text-[10px] text-amber-400 font-mono">ISBN: 978-85-01-01207-4</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <a href="#" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">
+              Amazon ↗
+            </a>
+            <button onclick="giftItem(this, 'Cem Anos de Solidão')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-bold text-xs shadow-md">
+              🎁 Vou Presentear
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex gap-3 items-center">
+            <div class="w-12 h-16 rounded-lg bg-slate-800 flex-shrink-0 flex items-center justify-center font-bold text-xs text-amber-400 border border-slate-700">
+              #006
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-white">O Idiota</h4>
+              <p class="text-xs text-slate-400">Fiódor Dostoiévski • 680 págs</p>
+              <span class="text-[10px] text-amber-400 font-mono">ISBN: 978-85-73-26244-5</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <a href="#" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">
+              Amazon ↗
+            </a>
+            <button onclick="giftItem(this, 'O Idiota')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-bold text-xs shadow-md">
+              🎁 Vou Presentear
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL DE FEEDBACK INTERATIVO -->
+  <div id="modal-feedback" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl text-center">
+      <div id="modal-icon" class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl mx-auto mb-3">
+        ⭐
+      </div>
+      <h3 id="modal-title" class="text-base font-bold text-white">Sucesso</h3>
+      <p id="modal-desc" class="text-xs text-slate-300 mt-2 leading-relaxed"></p>
+      <button onclick="closeModal()" class="mt-4 w-full py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors">
+        Entendido
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById('screen-' + screenId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-500', 'text-slate-950', 'shadow-sm');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById('btn-tab-' + screenId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-amber-500', 'text-slate-950', 'shadow-sm');
+      }
+    }
+
+    function toggleScannerMode(mode) {
+      const btnUnit = document.getElementById('btn-mode-unit');
+      const btnShelf = document.getElementById('btn-mode-shelf');
+      if (mode === 'unit') {
+        btnUnit.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all";
+        btnShelf.className = "px-2.5 py-1 rounded-lg text-slate-400 font-medium transition-all";
+      } else {
+        btnShelf.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all";
+        btnUnit.className = "px-2.5 py-1 rounded-lg text-slate-400 font-medium transition-all";
+      }
+    }
+
+    function saveBatch() {
+      const modal = document.getElementById('modal-feedback');
+      document.getElementById('modal-icon').innerText = "📚";
+      document.getElementById('modal-title').innerText = "5 Livros Salvos com Sucesso!";
+      document.getElementById('modal-desc').innerText = "A prateleira foi cadastrada em lote. Os livros já estão disponíveis na sua estante com seus respectivos metadados enriquecidos!";
+      modal.classList.remove('hidden');
+    }
+
+    function clearBatch() {
+      const modal = document.getElementById('modal-feedback');
+      document.getElementById('modal-icon').innerText = "🗑️";
+      document.getElementById('modal-title').innerText = "Bandeja Limpa";
+      document.getElementById('modal-desc').innerText = "A lista temporária de bipagem foi esvaziada.";
+      modal.classList.remove('hidden');
+    }
+
+    function triggerOcrModal() {
+      const modal = document.getElementById('modal-feedback');
+      document.getElementById('modal-icon').innerText = "📷";
+      document.getElementById('modal-title').innerText = "OCR de Lombada / Folha de Rosto";
+      document.getElementById('modal-desc').innerText = "A foto da lombada será enviada para o modelo de visão (Gemini Flash), que extrairá o Título e Autor da edição de sebo automaticamente!";
+      modal.classList.remove('hidden');
+    }
+
+    function showSlotModal(title, number) {
+      const modal = document.getElementById('modal-feedback');
+      document.getElementById('modal-icon').innerText = "📖";
+      document.getElementById('modal-title').innerText = `Item Faltante: ${title} (${number})`;
+      document.getElementById('modal-desc').innerText = "Você não possui este livro e ainda não realizou a leitura. Ele está disponível na sua Wishlist pública para presentes!";
+      modal.classList.remove('hidden');
+    }
+
+    function giftItem(button, bookTitle) {
+      button.disabled = true;
+      button.innerText = "✓ Você Reservou!";
+      button.className = "px-3.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold";
+      
+      const modal = document.getElementById('modal-feedback');
+      document.getElementById('modal-icon').innerText = "🎁";
+      document.getElementById('modal-title').innerText = `Presente Reservado!`;
+      document.getElementById('modal-desc').innerText = `Você reservou "${bookTitle}". Ninguém mais poderá comprar este mesmo item para Ulysses.`;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-feedback').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

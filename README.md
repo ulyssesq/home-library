@@ -1,0 +1,1 @@
+Starting the project and creating the structure.
