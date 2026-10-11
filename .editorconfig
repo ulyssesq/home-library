@@ -11,5 +11,5 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 
 # Rules for JSON, YAML, and YML files
-[*.{json.yml,yaml}]
-ident_size = 2
+[*.{json,yml,yaml}]
+indent_size = 2
